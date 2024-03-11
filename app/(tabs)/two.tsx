@@ -1,15 +1,32 @@
-import { Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { Button, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
-import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
-import { useState } from 'react';
+import { useIsFocused } from '@react-navigation/native';
+import { useEffect, useRef, useState } from 'react';
+// import Canvas from 'expo';
 
 export default function TabTwoScreen() {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
+  const isFocused = useIsFocused();
+  const cameraRef = useRef(null);
+  const [ratio, setRatio] = useState('16:9');
 
-  if (!permission) {
-    // Camera permissions are still loading
+  useEffect(() => {
+    if (cameraRef.current && Platform.OS === 'android') {
+      cameraRef.current.getSupportedRatiosAsync().then(ratios => {
+        if (ratios.includes('16:9')) {
+          setRatio('16:9');
+        }
+      });
+    }
+  }, [cameraRef]);
+
+  function toggleCameraType() {
+    setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
+  }
+  
+  if (!permission || !isFocused) {
     return <View />;
   }
 
@@ -23,13 +40,10 @@ export default function TabTwoScreen() {
     );
   }
 
-  function toggleCameraType() {
-    setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
-  }
-
+  const cameraStyleWithRatio = StyleSheet.compose(styles.camera, { aspectRatio: ratio === '16:9' ? 9/16 : 3/4 }); 
   return (
     <View style={styles.container}>
-      <Camera style={styles.camera} type={type}>
+      <Camera style={cameraStyleWithRatio} ref={cameraRef} type={type} ratio={ratio}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
             <Text style={styles.text}>Flip Camera</Text>
@@ -44,9 +58,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   camera: {
-    flex: 1,
+    aspectRatio: 3/4,
+    width: '100%'
   },
   buttonContainer: {
     flex: 1,
