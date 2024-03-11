@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { exercises } from '../../exerciseFunctions/exerciseFunctions';
+import React from 'react';
 
 export default function TabOneScreen() {
   
