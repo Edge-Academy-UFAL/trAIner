@@ -62,13 +62,14 @@ export class Tab2Page implements AfterViewInit {
 
   
   async ngAfterViewInit() {
-    this.ctx = this.canvas.nativeElement.getContext('2d')!;  
+    this.ctx = this.canvas.nativeElement.getContext('2d')!; 
+    console.log(this.ctx) 
     this.ctx.font = '20px Arial';
     const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
     this.video.nativeElement.srcObject = stream;
     await this.video.nativeElement.play();
     this.handleChange({detail: {value: 'Bicep Curl'}})
-    tf.ready();
+    await tf.ready();
     this.init()
    
   }
@@ -83,12 +84,6 @@ export class Tab2Page implements AfterViewInit {
     this.exerciseFunction = exercises[this.currentExercise]['exercise_function'];
     this.anglesFunction = exercises[this.currentExercise]['angles_function'];
     
-    console.log('Reps: ' + this.reps);
-    console.log('State: ' + this.state);
-    console.log('States: ' + this.states);
-    console.log('Joints: ' + this.joints);
-    console.log('Exercise function: ' + this.exerciseFunction);
-    console.log('Angles function: ' + this.anglesFunction);
 
   }
   async init() {
@@ -112,6 +107,7 @@ async detectPose() {
   // Desenhar keypoints, edges e ângulos
   this.ctx.fillText(Math.trunc(this.reps).toString(), 10, 50);
   if (poses && poses[0]) {
+    this.ctx.globalAlpha = 1.0
     this.drawAllEdges(poses[0].keypoints, this.EDGES, this.ctx);
     this.drawKeypoints(poses[0].keypoints, this.ctx);
 
@@ -128,13 +124,12 @@ async detectPose() {
 }
 
 drawAllEdges(keypoints:any, edges: number[][], context: CanvasRenderingContext2D) {
-  
-  context.globalAlpha = 1.0;
+  // context.globalAlpha = 2.0;
+  console.log(context)
   for (let i = 0; i < edges.length; i++) {
     if (keypoints[edges[i][0]].score < 0.3 || keypoints[edges[i][1]].score < 0.3) {
       continue;
     }
-    console.log("entrou")
     const edge = edges[i];
     const p1 = keypoints[edge[0]];
     const p2 = keypoints[edge[1]];
@@ -148,9 +143,9 @@ drawAllEdges(keypoints:any, edges: number[][], context: CanvasRenderingContext2D
 
 // Função para desenhar keypoints no canvas
 drawKeypoints(keypoints:any, context: CanvasRenderingContext2D) {
-
-  context.globalAlpha = 1.0;
-  console.log("entrou")
+  
+  // context.globalAlpha = 1.0;
+  
   for (let i = 0; i < keypoints.length; i++) {
     const { x, y, score } = keypoints[i];
     if (score >= 0.3) {

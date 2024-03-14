@@ -1,22 +1,13 @@
-#webcam {
-
-    width: 100%;
-    height: 100%;
-
-}
-.video-container {
+video, canvas {
     position: absolute;
-    width: 60px; /* Ajuste conforme necessário */
-    height: 480px; /* Ajuste conforme necessário */
-}
-
-#canvas {
-    position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
-    width: 640px;
-    height: 480px;
-    /* Altura do canvas - ajuste conforme necessário */
-    background-color: rgba(218, 22, 22, 0.5);
-    /* Cor de fundo do canvas */
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  canvas {
+    aspect-ratio: attr(width) / attr(height); /* Isso define a proporção de aspecto do canvas com base nas dimensões do vídeo */
+    background-color: rgba(22, 35, 218, 0.5)
 }
