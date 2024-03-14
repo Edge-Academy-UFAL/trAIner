@@ -6,8 +6,19 @@
   </ion-toolbar>
 </ion-header>
 
+
 <ion-content [fullscreen]="true" class="ion-padding camera-content">
-  <video id="webcam" autoplay></video>
-  <canvas id="canvas"></canvas>
+  <div class="video-container"></div>
+  <video #video id="webcam"  autoplay></video>
+  <canvas #canvas id="canvas" ></canvas>
+
+  <ion-list>
+    <ion-item>
+      <ion-select (ionChange)="handleChange($event)" label="Default label" placeholder="Favorite Fruit">
+        <ion-select-option  *ngFor="let exercise of listExercises" [value]="exercise">{{exercise}}</ion-select-option>
+        
+      </ion-select>
+    </ion-item>
+  </ion-list>
 
 </ion-content>

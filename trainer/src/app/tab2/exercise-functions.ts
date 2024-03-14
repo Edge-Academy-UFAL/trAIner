@@ -1,255 +1,141 @@
-export const exercises = {
-    'Bicep Curl': {
-      'states': {
-        'GOING_UP': 0,
-        'GOING_DOWN': 1,
-      },
-      'joints': [5, 6, 7, 8, 9, 10, 11, 12],
-      'initial_reps': 0.5,
-      'initial_state': 0,
-      'exercise_function': bicepCurls,
-      'angles_function': getAnglesBiceps
-    },
-    'Left Bicep Curl': {
-      'states': {
-        'GOING_UP': 0,
-        'GOING_DOWN': 1,
-      },
-      'joints': [5, 7, 9],
-      'initial_reps': 0.5,
-      'initial_state': 0,
-      'exercise_function': unilateralBicepCurls,
-      'angles_function': getLeftElbowAngle
-    },
-    'Right Bicep Curl': {
-      'states': {
-        'GOING_UP': 0,
-        'GOING_DOWN': 1,
-      },
-      'joints': [6, 8, 10],
-      'initial_reps': 0.5,
-      'initial_state': 0,
-      'exercise_function': unilateralBicepCurls,
-      'angles_function': getRightElbowAngle
-    },
-    'Triceps Extension': {
-      'states': {
-        'GOING_UP': 0,
-        'GOING_DOWN': 1,
-      },
-      'joints': [5, 6, 7, 8, 9, 10, 11, 12],
-      'initial_reps': 0.5,
-      'initial_state': 1,
-      'exercise_function': tricepExtension,
-      'angles_function': getAnglesTriceps
-    },
-    'Shoulder Press': {
-      'states': {
-        'GOING_UP': 0,
-        'GOING_DOWN': 1,
-      },
-      'joints': [5, 6, 7, 8, 9, 10],
-      'initial_reps': 0.5,
-      'initial_state': 0,
-      'exercise_function': shoulderPress,
-      'angles_function': getElbowAndShoulderAngles
-    },
-    'Shoulder Side Raise': {
-      'states': {
-        'GOING_UP': 0,
-        'GOING_DOWN': 1,
-      },
-      'joints': [5, 6, 7, 8, 9, 10, 11, 12],
-      'initial_reps': 0.5,
-      'initial_state': 0,
-      'exercise_function': shoulderSideRaise,
-      'angles_function': getShoulderAngles
-    }
-  };
+import * as ex from './exercise-functions2';
+
+let currentExercise: string;
+let reps: number;
+let state: number;
+let states:{GOING_UP: number, GOING_DOWN: number}; 
+let joints: number[];
+let exerciseFunction: any;
+let anglesFunction: any;
+
+
+
+document.getElementById('exercises').addEventListener('change', (e) => {
+  currentExercise = e.target.value;
+
+  console.log('Current exercise: ' + currentExercise);
+
+  reps = ex.exercises[currentExercise]['initial_reps'];
+  state = ex.exercises[currentExercise]['initial_state'];
+  states = ex.exercises[currentExercise]['states'];
+  joints = ex.exercises[currentExercise]['joints'];
+  exerciseFunction = ex.exercises[currentExercise]['exercise_function'];
+  anglesFunction = ex.exercises[currentExercise]['angles_function'];
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+  let detector;
+  // Carregar o modelo MoveNet
+  // Capturar vídeo
+  const video = document.getElementById('webcam');
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.font = '20px Arial';
+  const EDGES = [
+    [0, 1],
+    [0, 2],
+    [1, 3],
+    [2, 4],
+    [0, 5],
+    [0, 6],
+    [5, 7],
+    [7, 9],
+    [6, 8],
+    [8, 10],
+    [5, 6],
+    [5, 11],
+    [6, 12],
+    [11, 12],
+    [11, 13],
+    [13, 15],
+    [12, 14],
+    [14, 16]
+  ];
+
+
+
+  let e = document.getElementById("exercises");
+  currentExercise = e.options[e.selectedIndex].text;
+  reps = ex.exercises[currentExercise]['initial_reps'];
+  state = ex.exercises[currentExercise]['initial_state'];
+  states = ex.exercises[currentExercise]['states'];
+  joints = ex.exercises[currentExercise]['joints'];
+  exerciseFunction = ex.exercises[currentExercise]['exercise_function'];
+  anglesFunction = ex.exercises[currentExercise]['angles_function'];
+
   
-  function getAngleBetweenPoints(p1:any, p2:any, p3:any) {
-    try {
-      const angle = Math.acos(((p1.x - p2.x)*(p3.x - p2.x) + (p1.y - p2.y)*(p3.y - p2.y)) / (Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2)) * Math.sqrt(Math.pow(p3.x - p2.x, 2) + Math.pow(p3.y - p2.y, 2))));
-      return angle * (180 / Math.PI);
-    }
-    catch (e) {
-      return null;
-    }
+  async function init() {
+    const detectorConfig = {
+      modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING,
+      enableTracking: true,
+      trackerType: poseDetection.TrackerType.BoundingBox
+    };
+    detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet, detectorConfig);
+
+    detectPose();
   }
   
-  export function getLeftElbowAngle(keypoints:any) {
-    const leftShoulder = keypoints[5];
-    const leftElbow = keypoints[7];
-    const leftWrist = keypoints[9];
-  
-    return getAngleBetweenPoints(leftShoulder, leftElbow, leftWrist);
+  // Iniciar detecção de poses
+  async function detectPose() {
+    const poses = await detector.estimatePoses(video, { flipHorizontal: false });
+    // Limpar o canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Desenhar keypoints, edges e ângulos
+    ctx.fillText(Math.trunc(reps), 10, 50);
+    if (poses && poses[0]) {
+      drawAllEdges(poses[0].keypoints, EDGES, ctx);
+      drawKeypoints(poses[0].keypoints, ctx);
+
+      if (exerciseJointsAreVisible(poses[0].keypoints, joints)) {
+        [reps, state] = exerciseFunction(reps, anglesFunction(poses[0].keypoints), state, states);
+      }
+    }
+    else {
+      reps = ex.exercises[currentExercise]['initial_reps'];
+      state = ex.exercises[currentExercise]['initial_state'];
+    }
+
+    requestAnimationFrame(detectPose);
   }
-  
-  export function getRightElbowAngle(keypoints:any) {
-    const rightShoulder = keypoints[6];
-    const rightElbow = keypoints[8];
-    const rightWrist = keypoints[10];
-  
-    return getAngleBetweenPoints(rightShoulder, rightElbow, rightWrist);
+
+  function drawAllEdges(keypoints, edges, context) {
+    for (let i = 0; i < edges.length; i++) {
+      if (keypoints[edges[i][0]].score < 0.3 || keypoints[edges[i][1]].score < 0.3) {
+        continue;
+      }
+
+      const edge = edges[i];
+      const p1 = keypoints[edge[0]];
+      const p2 = keypoints[edge[1]];
+      context.beginPath();
+      context.moveTo(p1.x, p1.y);
+      context.lineTo(p2.x, p2.y);
+      context.strokeStyle = 'white';
+      context.stroke();
+    }
   }
-  
-  export function getShoulderAngles(keypoints:any) {
-    const leftShoulder = keypoints[5];
-    const leftElbow = keypoints[7];
-    const leftHip = keypoints[11];
-  
-    const rightShoulder = keypoints[6];
-    const rightElbow = keypoints[8];
-    const rightHip = keypoints[12];
-  
-    return [getAngleBetweenPoints(leftHip, leftShoulder, leftElbow), getAngleBetweenPoints(rightHip, rightShoulder, rightElbow)];
-  
+
+  // Função para desenhar keypoints no canvas
+  function drawKeypoints(keypoints, context) {
+    for (let i = 0; i < keypoints.length; i++) {
+      const { x, y, score } = keypoints[i];
+      if (score >= 0.3) {
+        context.beginPath();
+        context.arc(x, y, 5, 0, 6);
+        context.fillStyle = 'red';
+        context.fill();
+      }
+    }
   }
-  
-  export function getElbowAngles(keypoints:any) {
-    const leftShoulder = keypoints[5];
-    const leftElbow = keypoints[7];
-    const leftWrist = keypoints[9];
-  
-    const rightShoulder = keypoints[6];
-    const rightElbow = keypoints[8];
-    const rightWrist = keypoints[10];
-  
-    return [getAngleBetweenPoints(leftShoulder, leftElbow, leftWrist), getAngleBetweenPoints(rightShoulder, rightElbow, rightWrist)];
+
+  function exerciseJointsAreVisible(keypoints, joints) {
+    for (let i = 0; i < joints.length; i++) {
+      if (keypoints[joints[i]].score < 0.3) {
+        return false;
+      }
+    }
+    return true;
   }
-  
-  // refatorar | unificar as duas funções abaixo
-  
-  export function getAnglesBiceps(keypoints:any) {
-    return getElbowAngles(keypoints).concat(getShoulderAngles(keypoints));
-  }
-  
-  export function getAnglesTriceps(keypoints:any) {
-    return getElbowAngles(keypoints).concat(getShoulderAngles(keypoints));
-  }
-  
-  export function getElbowAndShoulderAngles(keypoints:any) {
-    const [leftElbowAngle, rightElbowAngle] = getElbowAngles(keypoints);
-  
-    const leftShoulder = keypoints[5];
-    const leftElbow = keypoints[7];
-    const leftWrist = keypoints[9];
-  
-    const rightShoulder = keypoints[6];
-    const rightElbow = keypoints[8];
-    const rightWrist = keypoints[10];
-  
-    const leftShoulderAngle = getAngleBetweenPoints(leftElbow, leftShoulder, rightShoulder);
-    const rightShoulderAngle = getAngleBetweenPoints(rightElbow, rightShoulder, leftShoulder);
-  
-    return [leftElbowAngle, rightElbowAngle, leftShoulderAngle, rightShoulderAngle];
-  }
-  
-  export function bicepCurls(reps:any, angles:any, state:any, states:any) {
-    const [leftAngle, rightAngle, leftShoulderAngle, rightShoulderAngle] = angles;
-    if (leftAngle === null || rightAngle === null || leftShoulderAngle === null || rightShoulderAngle === null) {
-      return [reps, state];
-    }
-  
-    if (leftAngle < 45 && rightAngle < 45  && leftShoulderAngle < 40 && rightShoulderAngle < 40 && state === states['GOING_UP']) {
-      state = states['GOING_DOWN'];
-      reps += 0.5;
-    }
-    else if (leftAngle > 120 && rightAngle > 120 && leftShoulderAngle < 40 && rightShoulderAngle < 40 && state === states['GOING_DOWN']) {
-      state = states['GOING_UP'];
-      reps += 0.5;
-    }
-  
-    return [reps, state];
-  }
-  
-  export function unilateralBicepCurls(reps:any, angle:any, state:any, states:any) {
-    if (angle === null) {
-      return [reps, state];
-    }
-  
-    if (angle < 45 && state === states['GOING_UP']) {
-      state = states['GOING_DOWN'];
-      reps += 0.5;
-    }
-    else if (angle > 140 && state === states['GOING_DOWN']) {
-      state = states['GOING_UP'];
-      reps += 0.5;
-    }
-  
-    return [reps, state];
-  }
-  
-  export function tricepExtension(reps:any, angles:any, state:any, states:any) {
-    const [leftAngle, rightAngle, leftShoulderAngle, rightShoulderAngle] = angles;
-    if (leftAngle === null || rightAngle === null || leftShoulderAngle === null || rightShoulderAngle === null) {
-      return [reps, state];
-    }
-  
-    if (leftAngle < 45 && rightAngle < 45  && leftShoulderAngle < 20 && rightShoulderAngle < 20 && state === states['GOING_UP']) {
-      state = states['GOING_DOWN'];
-      reps += 0.5;
-    }
-    else if (leftAngle > 145 && rightAngle > 145 && leftShoulderAngle < 20 && rightShoulderAngle < 20 && state === states['GOING_DOWN']) {
-      state = states['GOING_UP'];
-      reps += 0.5;
-    }
-  
-    return [reps, state];
-  }
-  
-  export function unilateralTricepExtension(reps:any, angle:any, state:any, states:any) {
-    console.log(angle);
-    if (angle === null) {
-      return [reps, state];
-    }
-  
-    if (angle < 45 && state === states['GOING_UP']) {
-      state = states['GOING_DOWN'];
-      reps += 0.5;
-    }
-    else if (angle > 140 && state === states['GOING_DOWN']) {
-      state = states['GOING_UP'];
-      reps += 0.5;
-    }
-  
-    return [reps, state];
-  }
-  
-  export function shoulderPress(reps:any, angle:any, state:any, states:any) {
-    const [leftElbowAngle, rightElbowAngle, leftShoulderAngle, rightShoulderAngle] = angle;
-    if (leftElbowAngle === null || rightElbowAngle === null || leftShoulderAngle === null || rightShoulderAngle === null) {
-      return [reps, state];
-    }
-  
-    if (leftShoulderAngle < 145 && rightShoulderAngle < 145 && leftElbowAngle > 140 && rightElbowAngle > 140 && state === states['GOING_UP']) {
-      state = states['GOING_DOWN'];
-      reps += 0.5;
-    }
-    else if (leftShoulderAngle > 160 && rightShoulderAngle > 160 && leftElbowAngle < 110 && rightElbowAngle < 110 && state === states['GOING_DOWN']) {
-      state = states['GOING_UP'];
-      reps += 0.5;
-    }
-  
-    return [reps, state];
-  }
-  
-  export function shoulderSideRaise(reps:any, angle:any, state:any, states:any) {
-    const [leftShoulderAngle, rightShoulderAngle] = angle;
-  
-    console.log(angle)
-    if (leftShoulderAngle === null || rightShoulderAngle === null) {
-      return [reps, state];
-    }
-  
-    if (leftShoulderAngle >= 85 && rightShoulderAngle >= 85 && state === states['GOING_UP']) {
-      state = states['GOING_DOWN'];
-      reps += 0.5;
-    }
-    else if (leftShoulderAngle < 20 && rightShoulderAngle < 20 && state === states['GOING_DOWN']) {
-      state = states['GOING_UP'];
-      reps += 0.5;
-    }
-  
-    return [reps, state];
-  }
+
+  init();
+});
