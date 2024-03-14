@@ -129,6 +129,7 @@ async detectPose() {
 
 drawAllEdges(keypoints:any, edges: number[][], context: CanvasRenderingContext2D) {
   
+  context.globalAlpha = 1.0;
   for (let i = 0; i < edges.length; i++) {
     if (keypoints[edges[i][0]].score < 0.3 || keypoints[edges[i][1]].score < 0.3) {
       continue;
@@ -147,6 +148,8 @@ drawAllEdges(keypoints:any, edges: number[][], context: CanvasRenderingContext2D
 
 // Função para desenhar keypoints no canvas
 drawKeypoints(keypoints:any, context: CanvasRenderingContext2D) {
+
+  context.globalAlpha = 1.0;
   console.log("entrou")
   for (let i = 0; i < keypoints.length; i++) {
     const { x, y, score } = keypoints[i];
