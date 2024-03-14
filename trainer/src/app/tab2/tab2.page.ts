@@ -21,6 +21,10 @@ export class Tab2Page implements AfterViewInit {
   @ViewChild('canvas')
   canvas!: ElementRef<HTMLCanvasElement>;
   ctx!: CanvasRenderingContext2D;
+  
+  @ViewChild('canvasRepetitions')
+  canvasRepetitions!: ElementRef<HTMLCanvasElement>;
+  ctxRepetitions!: CanvasRenderingContext2D;
 
  currentExercise ='Bicep Curl';
  reps!: number;
@@ -29,6 +33,7 @@ export class Tab2Page implements AfterViewInit {
  joints!: number[];
  exerciseFunction: any;
  anglesFunction: any;
+ stateWorkout: boolean = false;
 
   EDGES = [
     [0, 1],
@@ -58,16 +63,21 @@ export class Tab2Page implements AfterViewInit {
     "Shoulder Press",
     "Shoulder Side Raise"];
 
-
-
   
   async ngAfterViewInit() {
-    this.ctx = this.canvas.nativeElement.getContext('2d')!; 
-    console.log(this.ctx) 
-    this.ctx.font = '20px Arial';
+    let stateWorkout = true;
+    this.ctx = this.canvas.nativeElement.getContext('2d')!;
+    this.ctxRepetitions = this.canvasRepetitions.nativeElement.getContext('2d')!;
+    //console.log(this.ctx) 
     const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
     this.video.nativeElement.srcObject = stream;
     await this.video.nativeElement.play();
+    console.log(this.ctxRepetitions);
+
+    this.canvasRepetitions.nativeElement.width = this.video.nativeElement.videoWidth;
+    this.canvasRepetitions.nativeElement.height = this.video.nativeElement.videoHeight;
+    this.canvas.nativeElement.width = this.video.nativeElement.videoWidth;
+    this.canvas.nativeElement.height = this.video.nativeElement.videoHeight;
     this.handleChange({detail: {value: 'Bicep Curl'}})
     await tf.ready();
     this.init()
@@ -94,7 +104,6 @@ export class Tab2Page implements AfterViewInit {
       trackerType: poseDetection.TrackerType.BoundingBox
     };
     this.detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet, detectorConfig);
-
     await this.detectPose();
   }
 
@@ -104,14 +113,19 @@ async detectPose() {
   const poses = await this.detector.estimatePoses(this.video.nativeElement, { flipHorizontal: false });
   // Limpar o canvas
   this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+  this.ctxRepetitions.clearRect(0, 0, this.canvasRepetitions.nativeElement.width, this.canvasRepetitions.nativeElement.height);
   // Desenhar keypoints, edges e ângulos
-  this.ctx.fillText(Math.trunc(this.reps).toString(), 10, 50);
+  this.ctxRepetitions.font = '50px Arial';
+  let widthNumber = this.canvasRepetitions.nativeElement.width / 100;
+  this.ctxRepetitions.fillText(Math.trunc(this.reps).toString(), widthNumber, 100);
+  //console.log(this.reps);
+  
   if (poses && poses[0]) {
     this.ctx.globalAlpha = 1.0
     this.drawAllEdges(poses[0].keypoints, this.EDGES, this.ctx);
     this.drawKeypoints(poses[0].keypoints, this.ctx);
 
-    if (this.exerciseJointsAreVisible(poses[0].keypoints, this.joints)) {
+    if (this.exerciseJointsAreVisible(poses[0].keypoints, this.joints) && !(this.stateWorkout)) {
       [this.reps, this.state] = this.exerciseFunction(this.reps, this.anglesFunction(poses[0].keypoints), this.state, this.states);
     }
   }
@@ -125,7 +139,7 @@ async detectPose() {
 
 drawAllEdges(keypoints:any, edges: number[][], context: CanvasRenderingContext2D) {
   // context.globalAlpha = 2.0;
-  console.log(context)
+  //console.log(context)
   for (let i = 0; i < edges.length; i++) {
     if (keypoints[edges[i][0]].score < 0.3 || keypoints[edges[i][1]].score < 0.3) {
       continue;
@@ -169,58 +183,15 @@ exerciseJointsAreVisible(keypoints: any, joints: any) {
 }
     
 
+stopWorkout(){
+  if(this.stateWorkout){
+    this.stateWorkout = false;
+  }
+  else{
+    this.stateWorkout = true;
+  }
+  console.log(this.stateWorkout);
   
-  
-
-// let e = document.getElementById("exercises");
-// currentExercise = e.options[e.selectedIndex].text;
-// reps = ex.exercises[currentExercise]['initial_reps'];
-// state = ex.exercises[currentExercise]['initial_state'];
-// states = ex.exercises[currentExercise]['states'];
-// joints = ex.exercises[currentExercise]['joints'];
-// exerciseFunction = ex.exercises[currentExercise]['exercise_function'];
-// anglesFunction = ex.exercises[currentExercise]['angles_function'];
-
-
-// async function init() {
-//   const detectorConfig = {
-//     modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING,
-//     enableTracking: true,
-//     trackerType: poseDetection.TrackerType.BoundingBox
-//   };
-//   detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet, detectorConfig);
-
-//   detectPose();
-// }
-
-
-
-
-
-// Função para desenhar keypoints no canvas
-// function drawKeypoints(keypoints, context) {
-//   for (let i = 0; i < keypoints.length; i++) {
-//     const { x, y, score } = keypoints[i];
-//     if (score >= 0.3) {
-//       context.beginPath();
-//       context.arc(x, y, 5, 0, 6);
-//       context.fillStyle = 'red';
-//       context.fill();
-//     }
-//   }
-// }
-
-// function exerciseJointsAreVisible(keypoints, joints) {
-//   for (let i = 0; i < joints.length; i++) {
-//     if (keypoints[joints[i]].score < 0.3) {
-//       return false;
-//     }
-//   }
-//   return true;
-// }
-    
-
-  
-
+}
 }
   

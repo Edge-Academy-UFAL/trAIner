@@ -1,13 +1,20 @@
-video, canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-  
-  canvas {
-    aspect-ratio: attr(width) / attr(height); /* Isso define a proporção de aspecto do canvas com base nas dimensões do vídeo */
-    background-color: rgba(22, 35, 218, 0.5)
+.inverted{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  display: block;
+  transform: rotateY(180deg)
 }
+
+canvas {
+  aspect-ratio: attr(width) / attr(height); /* Isso define a proporção de aspecto do canvas com base nas dimensões do vídeo */
+}
+
+#canvasRepetitions{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
