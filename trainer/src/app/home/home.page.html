@@ -1,0 +1,30 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <!-- Logo -->
+    <ion-img slot="start" src=""></ion-img>
+
+    <!-- Nome do aplicativo -->
+    <ion-title>TrAIner</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-img src=""></ion-img>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">TrAIner</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Botão Iniciar -->
+  <ion-button expand="full" color="primary" routerLink="/">
+    <ion-icon slot="start" name="play"></ion-icon>
+    Iniciar
+  </ion-button>
+
+  <!-- Botão Cadastre -->
+  <ion-button expand="full" color="secondary" routerLink="/register-page">
+    <ion-icon slot="start" name="person-add"></ion-icon>
+    Cadastre-se
+  </ion-button>
+</ion-content>
