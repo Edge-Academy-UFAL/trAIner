@@ -22,6 +22,6 @@ export class ExerciseSelectionPage implements OnInit {
   selectExercise(exercise: string) {
     //console.log(this.selectExercise);
     
-    this.router.navigate(['tabs/tab2'], { state: { selectExercise: exercise } });
+    this.router.navigate(['tabs/tab2'], { queryParams: { selectExercise: exercise } });
   }
 }

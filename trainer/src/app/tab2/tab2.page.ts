@@ -5,7 +5,7 @@ import * as tf from '@tensorflow/tfjs-core';
 import '@tensorflow/tfjs-backend-webgl';
 // import '@tensorflow/tfjs-backend-wasm';
 import {exercises} from './exercise-functions2';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -64,7 +64,15 @@ export class Tab2Page implements AfterViewInit {
     "Shoulder Press",
     "Shoulder Side Raise"];
   
-  constructor(private router: Router) {}
+  constructor(private router: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.router.queryParams.subscribe(params => {
+      console.log(params);
+      this.currentExercise = params['selectExercise'];
+      console.log(this.currentExercise);
+    });
+  }
 
   
   async ngAfterViewInit() {
@@ -83,17 +91,13 @@ export class Tab2Page implements AfterViewInit {
     this.canvas.nativeElement.width = this.video.nativeElement.videoWidth;
     this.canvas.nativeElement.height = this.video.nativeElement.videoHeight;
 
-    const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as {selectedExercise: string};
-    this.handleChange(state.selectedExercise)
-
+    this.handleChange(this.currentExercise);
     await tf.ready();
     this.init()
    
   }
 
   handleChange(exercise: any) {
-    this.currentExercise = exercise.detail.value;
     console.log('Current exercise: ' + this.currentExercise);
     this.reps = exercises[this.currentExercise]['initial_reps'];
     this.state = exercises[this.currentExercise]['initial_state'];

@@ -12,9 +12,10 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'tabs/tab1',
+    redirectTo: 'tabs/tab2',
     pathMatch: 'full'
-  },  {
+  },
+  {
     path: 'exercise-selection',
     loadChildren: () => import('./exercise-selection/exercise-selection.module').then( m => m.ExerciseSelectionPageModule)
   },
