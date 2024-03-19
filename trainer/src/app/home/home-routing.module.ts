@@ -9,8 +9,8 @@ const routes: Routes = [
     component: HomePage
   },
   {
-    path: 'exercise',
-    loadChildren: () => import('../tabs/tabs.module').then(m => m.TabsPageModule)
+    path: 'exercise-selection',
+    loadChildren: () => import('../exercise-selection/exercise-selection.module').then( m => m.ExerciseSelectionPageModule)
   }
 ];
 
