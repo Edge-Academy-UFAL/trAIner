@@ -1,11 +1,10 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import * as poseDetection from '@tensorflow-models/pose-detection';
 import * as tf from '@tensorflow/tfjs-core';
-// Register one of the TF.js backends.
 import '@tensorflow/tfjs-backend-webgl';
-// import '@tensorflow/tfjs-backend-wasm';
 import {exercises} from './exercise-functions2';
 import { ActivatedRoute } from '@angular/router';
+import { LoadingController } from '@ionic/angular';
 
 
 @Component({
@@ -64,7 +63,7 @@ export class Tab2Page implements AfterViewInit {
     "Shoulder Press",
     "Shoulder Side Raise"];
   
-  constructor(private router: ActivatedRoute) {}
+  constructor(private router: ActivatedRoute, private loadingCtrl: LoadingController) {}
 
   ngOnInit() {
     this.router.queryParams.subscribe(params => {
@@ -73,7 +72,14 @@ export class Tab2Page implements AfterViewInit {
       console.log(this.currentExercise);
     });
   }
-
+  async showLoading(){
+    const loading = await this.loadingCtrl.create({
+      message: 'Loading...',
+      duration: 3000
+    });
+    await loading.present();
+  }
+  
   
   async ngAfterViewInit() {
     
@@ -92,6 +98,7 @@ export class Tab2Page implements AfterViewInit {
     this.canvas.nativeElement.height = this.video.nativeElement.videoHeight;
 
     this.handleChange(this.currentExercise);
+    this.showLoading();
     await tf.ready();
     this.init()
    

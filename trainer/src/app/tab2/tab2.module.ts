@@ -15,7 +15,7 @@ import { ExerciseSelectionPageModule } from '../exercise-selection/exercise-sele
     FormsModule,
     ExploreContainerComponentModule,
     Tab2PageRoutingModule,
-    ExerciseSelectionPageModule
+    ExerciseSelectionPageModule,
   ],
   declarations: [Tab2Page]
 })

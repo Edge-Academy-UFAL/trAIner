@@ -31,7 +31,9 @@
                 "output": "./svg"
               }
             ],
-            "styles": ["src/global.scss", "src/theme/variables.scss"],
+            "styles": ["src/global.scss",
+             "src/theme/variables.scss",
+             "node_modules/ngx-spinner/animations/ball-scale-multiple.css"],
             "scripts": []
           },
           "configurations": {

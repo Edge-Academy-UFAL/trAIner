@@ -1,5 +1,6 @@
 export const exercises: Record<string, any> = {
     'Bicep Curl': {
+      image : 'assets/imgs/bicep-curl.png',
       'states': {
         'GOING_UP': 0,
         'GOING_DOWN': 1,
@@ -11,6 +12,7 @@ export const exercises: Record<string, any> = {
       'angles_function': getAnglesBiceps
     },
     'Left Bicep Curl': {
+      image : 'assets/imgs/left-bicep-curl.jpg',
       'states': {
         'GOING_UP': 0,
         'GOING_DOWN': 1,
@@ -22,6 +24,7 @@ export const exercises: Record<string, any> = {
       'angles_function': getLeftElbowAngle
     },
     'Right Bicep Curl': {
+      image : 'assets/imgs/right-bicep-curl.jpg',
       'states': {
         'GOING_UP': 0,
         'GOING_DOWN': 1,
@@ -32,7 +35,8 @@ export const exercises: Record<string, any> = {
       'exercise_function': unilateralBicepCurls,
       'angles_function': getRightElbowAngle
     },
-    'Triceps Extension': {
+    'Cable Triceps Extension': {
+      image : 'assets/imgs/cable-triceps-extension.png',
       'states': {
         'GOING_UP': 0,
         'GOING_DOWN': 1,
@@ -44,6 +48,7 @@ export const exercises: Record<string, any> = {
       'angles_function': getAnglesTriceps
     },
     'Shoulder Press': {
+      image : 'assets/imgs/shoulder-press.png',
       'states': {
         'GOING_UP': 0,
         'GOING_DOWN': 1,
@@ -54,7 +59,8 @@ export const exercises: Record<string, any> = {
       'exercise_function': shoulderPress,
       'angles_function': getElbowAndShoulderAngles
     },
-    'Shoulder Side Raise': {
+    'Lateral Raise': {
+      image : 'assets/imgs/lateral-raise.png',
       'states': {
         'GOING_UP': 0,
         'GOING_DOWN': 1,
