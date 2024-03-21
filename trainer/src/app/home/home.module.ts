@@ -7,7 +7,6 @@ import { IonicModule } from '@ionic/angular';
 import { HomePageRoutingModule } from './home-routing.module';
 
 import { HomePage } from './home.page';
-import { ExerciseSelectionPageModule } from '../exercise-selection/exercise-selection.module';
 
 @NgModule({
   imports: [
@@ -15,7 +14,6 @@ import { ExerciseSelectionPageModule } from '../exercise-selection/exercise-sele
     FormsModule,
     IonicModule,
     HomePageRoutingModule,
-    ExerciseSelectionPageModule
   ],
   declarations: [HomePage]
 })

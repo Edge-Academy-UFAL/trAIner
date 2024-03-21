@@ -7,7 +7,6 @@ import { IonicModule } from '@ionic/angular';
 import { ExerciseSelectionPageRoutingModule } from './exercise-selection-routing.module';
 
 import { ExerciseSelectionPage } from './exercise-selection.page';
-import { TabsPageModule } from '../tabs/tabs.module';
 
 @NgModule({
   imports: [
@@ -17,6 +16,5 @@ import { TabsPageModule } from '../tabs/tabs.module';
     ExerciseSelectionPageRoutingModule,
   ],
   declarations: [ExerciseSelectionPage],
-  exports: [ExerciseSelectionPage]
 })
 export class ExerciseSelectionPageModule {}

@@ -1,11 +1,10 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import * as poseDetection from '@tensorflow-models/pose-detection';
 import * as tf from '@tensorflow/tfjs-core';
 import '@tensorflow/tfjs-backend-webgl';
 import {exercises} from './exercise-functions2';
 import { ActivatedRoute } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
-
 
 @Component({
   selector: 'app-tab2',
