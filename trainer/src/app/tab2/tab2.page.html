@@ -13,15 +13,9 @@
     <canvas #canvas id="canvas" class="inverted"></canvas>
     <canvas #canvasRepetitions id="canvasRepetitions"></canvas>
   </div>
-  <ion-button shape="round" (click)="stopWorkout()">Stop</ion-button>
-  <!--
-  <ion-list>
-    <ion-item>
-      <ion-select (ionChange)="handleChange($event)" label="Default label" placeholder="Favorite Fruit">
-        <ion-select-option  *ngFor="let exercise of listExercises" [value]="exercise">{{exercise}}</ion-select-option>
-        
-      </ion-select>
-    </ion-item>
-  </ion-list>
-  -->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="center">
+    <ion-fab-button (click)="stopWorkout()">
+      <ion-icon name="stop"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
