@@ -66,6 +66,7 @@ export class Tab2Page implements AfterViewInit {
 
   constructor(private router: ActivatedRoute, private loadingCtrl: LoadingController ,private route: Router ) {
     // this.stateWorkout = false;
+    console.log(this.stateWorkout);
   }
 
   ngOnInit() {
@@ -120,6 +121,10 @@ export class Tab2Page implements AfterViewInit {
 
   }
   async init() {
+    if(this.detector){
+      this.detector.dispose();
+    }
+
     const detectorConfig = {
       modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING,
       enableTracking: true,
@@ -132,8 +137,9 @@ export class Tab2Page implements AfterViewInit {
 
   // Iniciar detecção de poses
   async detectPose() {
-
+    
     const poses = await this.detector.estimatePoses(this.video.nativeElement, { flipHorizontal: false });
+    
     // Limpar o canvas
     this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     this.ctxRepetitions.clearRect(0, 0, this.canvasRepetitions.nativeElement.width, this.canvasRepetitions.nativeElement.height);
@@ -216,6 +222,8 @@ export class Tab2Page implements AfterViewInit {
     else {
       this.stateWorkout = true;
       tf.disposeVariables();
+      console.log(tf.disposeVariables());
+      console.log(tf);
       tracks.forEach(function (track) {
         track.stop();
       });
