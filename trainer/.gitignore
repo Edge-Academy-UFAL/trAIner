@@ -52,7 +52,7 @@ yarn-error.log
 !.vscode/extensions.json
 .history/*
 
-
+/android
 # Miscellaneous
 /.angular
 /.angular/cache
