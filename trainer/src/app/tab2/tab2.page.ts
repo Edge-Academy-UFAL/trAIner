@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import * as poseDetection from '@tensorflow-models/pose-detection';
 import * as tf from '@tensorflow/tfjs-core';
 import '@tensorflow/tfjs-backend-webgl';
@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   styleUrls: ['tab2.page.scss']
 })
 
-export class Tab2Page implements AfterViewInit {
+export class Tab2Page implements AfterViewInit, OnDestroy {
   detector: any;
   @ViewChild('video')
   video!: ElementRef<HTMLVideoElement>;
@@ -68,6 +68,10 @@ export class Tab2Page implements AfterViewInit {
     // this.stateWorkout = false;
     console.log(this.stateWorkout);
   }
+  ngOnDestroy(): void {
+    this.stateWorkout = false;
+    this.stopWorkout()
+  }
 
   ngOnInit() {
     this.stateWorkout = false;
@@ -84,7 +88,17 @@ export class Tab2Page implements AfterViewInit {
     this.ctx = this.canvas.nativeElement.getContext('2d')!;
     this.ctxRepetitions = this.canvasRepetitions.nativeElement.getContext('2d')!;
     //console.log(this.ctx) 
-    const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        aspectRatio: { ideal: 16 / 9 },
+        facingMode: { ideal: 'user' },
+        // width: { min: 640, ideal: 1280, max: 1920},
+        // height: { min: 480, ideal: 720, max: 1080},
+        frameRate: { min: 30, ideal: 60, max: 120 }
+      }
+    }
+
+    );
     this.video.nativeElement.srcObject = stream;
     await this.video.nativeElement.play();
     console.log(this.ctxRepetitions);
@@ -227,9 +241,9 @@ export class Tab2Page implements AfterViewInit {
       tf.engine().endScope()
       // tf.disposeVariables();
 
-      
 
-      
+
+
       console.log('Número de tensores após a limpeza:', tf.memory().numTensors);
       tracks.forEach(function (track) {
         track.stop();
