@@ -12,7 +12,7 @@ export const exercises: Record<string, any> = {
       'angles_function': getAnglesBiceps
     },
     'Left Bicep Curl': {
-      image : 'assets/imgs/left-bicep-curl.jpg',
+      image : 'assets/imgs/left-bicep-curl.png',
       'states': {
         'GOING_UP': 0,
         'GOING_DOWN': 1,
@@ -24,7 +24,7 @@ export const exercises: Record<string, any> = {
       'angles_function': getLeftElbowAngle
     },
     'Right Bicep Curl': {
-      image : 'assets/imgs/right-bicep-curl.jpg',
+      image : 'assets/imgs/right-bicep-curl.png',
       'states': {
         'GOING_UP': 0,
         'GOING_DOWN': 1,

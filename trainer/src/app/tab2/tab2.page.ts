@@ -138,10 +138,11 @@ export class Tab2Page implements AfterViewInit {
     this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     this.ctxRepetitions.clearRect(0, 0, this.canvasRepetitions.nativeElement.width, this.canvasRepetitions.nativeElement.height);
     // Desenhar keypoints, edges e ângulos
-    this.ctxRepetitions.font = '50px Arial';
+    this.ctxRepetitions.font = '70px Arial';
     let widthNumber = this.canvasRepetitions.nativeElement.width / 100;
-    this.ctxRepetitions.fillText(Math.trunc(this.reps).toString(), widthNumber, 100);
-    //console.log(this.reps);
+    this.ctxRepetitions.fillText(Math.trunc(this.reps).toString(), widthNumber, 110);
+    this.ctxRepetitions.strokeStyle = 'black';
+    this.ctxRepetitions.fillStyle = 'white';
 
     if (poses && poses[0]) {
       this.ctx.globalAlpha = 1.0
@@ -207,11 +208,17 @@ export class Tab2Page implements AfterViewInit {
 
 
   stopWorkout() {
+    let stream = this.video.nativeElement.srcObject as MediaStream;
+    let tracks = stream?.getTracks();
     if (this.stateWorkout) {
       this.stateWorkout = false;
     }
     else {
       this.stateWorkout = true;
+      tf.disposeVariables();
+      tracks.forEach(function (track) {
+        track.stop();
+      });
       this.route.navigate(['exercise-selection']);
     }
     console.log(this.stateWorkout);
