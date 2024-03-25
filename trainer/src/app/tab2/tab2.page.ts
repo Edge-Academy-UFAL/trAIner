@@ -64,7 +64,7 @@ export class Tab2Page implements AfterViewInit {
     "Shoulder Press",
     "Shoulder Side Raise"];
 
-  constructor(private router: ActivatedRoute, private loadingCtrl: LoadingController ,private route: Router ) {
+  constructor(private router: ActivatedRoute, private loadingCtrl: LoadingController, private route: Router) {
     // this.stateWorkout = false;
     console.log(this.stateWorkout);
   }
@@ -96,6 +96,7 @@ export class Tab2Page implements AfterViewInit {
 
     this.handleChange(this.currentExercise);
     this.showLoading();
+    tf.engine().startScope()
     await tf.ready();
     this.init()
 
@@ -121,7 +122,7 @@ export class Tab2Page implements AfterViewInit {
 
   }
   async init() {
-    if(this.detector){
+    if (this.detector) {
       this.detector.dispose();
     }
 
@@ -137,9 +138,9 @@ export class Tab2Page implements AfterViewInit {
 
   // Iniciar detecção de poses
   async detectPose() {
-    
+
     const poses = await this.detector.estimatePoses(this.video.nativeElement, { flipHorizontal: false });
-    
+
     // Limpar o canvas
     this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     this.ctxRepetitions.clearRect(0, 0, this.canvasRepetitions.nativeElement.width, this.canvasRepetitions.nativeElement.height);
@@ -221,9 +222,15 @@ export class Tab2Page implements AfterViewInit {
     }
     else {
       this.stateWorkout = true;
-      tf.disposeVariables();
-      console.log(tf.disposeVariables());
-      console.log(tf);
+      // Libera todas as variáveis TensorFlow
+      console.log('Número de tensores antes da limpeza:', tf.memory().numTensors);
+      tf.engine().endScope()
+      // tf.disposeVariables();
+
+      
+
+      
+      console.log('Número de tensores após a limpeza:', tf.memory().numTensors);
       tracks.forEach(function (track) {
         track.stop();
       });
