@@ -53,6 +53,7 @@ yarn-error.log
 .history/*
 
 /android
+/www
 # Miscellaneous
 /.angular
 /.angular/cache
@@ -66,6 +67,3 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
-
-# Android
-/android/

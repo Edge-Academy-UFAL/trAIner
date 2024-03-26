@@ -70,7 +70,6 @@ export class Tab2Page implements AfterViewInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.stateWorkout = false;
-    this.stopWorkout()
   }
 
   ngOnInit() {
@@ -228,9 +227,8 @@ export class Tab2Page implements AfterViewInit, OnDestroy {
   }
 
 
-  stopWorkout() {
-    let stream = this.video.nativeElement.srcObject as MediaStream;
-    let tracks = stream?.getTracks();
+  async stopWorkout() {
+
     if (this.stateWorkout) {
       this.stateWorkout = false;
     }
@@ -240,14 +238,12 @@ export class Tab2Page implements AfterViewInit, OnDestroy {
       console.log('Número de tensores antes da limpeza:', tf.memory().numTensors);
       tf.engine().endScope()
       // tf.disposeVariables();
-
-
-
-
+      if(this.video.nativeElement.srcObject){
+        let stream= this.video.nativeElement.srcObject as MediaStream;
+        let tracks = stream.getTracks();
+        tracks.forEach(track => track.stop())
+      }
       console.log('Número de tensores após a limpeza:', tf.memory().numTensors);
-      tracks.forEach(function (track) {
-        track.stop();
-      });
       this.route.navigate(['exercise-selection']);
     }
     console.log(this.stateWorkout);
