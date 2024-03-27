@@ -33,6 +33,7 @@ export class Tab2Page implements AfterViewInit, OnDestroy {
   joints!: number[];
   exerciseFunction: any;
   anglesFunction: any;
+  instruction: any;
   stateWorkout: boolean = false;
   loading: any;
 
@@ -131,12 +132,13 @@ export class Tab2Page implements AfterViewInit, OnDestroy {
     this.joints = exercises[this.currentExercise]['joints'];
     this.exerciseFunction = exercises[this.currentExercise]['exercise_function'];
     this.anglesFunction = exercises[this.currentExercise]['angles_function'];
-
+    this.instruction = exercises[this.currentExercise]['instruction'];
 
   }
   async init() {
     if (this.detector) {
       this.detector.dispose();
+      this.detector = null;
     }
 
     const detectorConfig = {
@@ -163,6 +165,10 @@ export class Tab2Page implements AfterViewInit, OnDestroy {
     this.ctxRepetitions.fillText(Math.trunc(this.reps).toString(), widthNumber, 110);
     this.ctxRepetitions.strokeStyle = 'black';
     this.ctxRepetitions.fillStyle = 'white';
+    
+    this.ctxRepetitions.font = '30px Arial';
+    this.ctxRepetitions.fillText(this.instruction, 10, this.canvasRepetitions.nativeElement.height);
+    this.ctxRepetitions.strokeText(this.instruction, 10, this.canvasRepetitions.nativeElement.height);
 
     if (poses && poses[0]) {
       this.ctx.globalAlpha = 1.0
@@ -170,7 +176,7 @@ export class Tab2Page implements AfterViewInit, OnDestroy {
       this.drawKeypoints(poses[0].keypoints, this.ctx);
 
       if (this.exerciseJointsAreVisible(poses[0].keypoints, this.joints) && !(this.stateWorkout)) {
-        [this.reps, this.state] = this.exerciseFunction(this.reps, this.anglesFunction(poses[0].keypoints), this.state, this.states);
+        [this.reps, this.state, this.instruction] = this.exerciseFunction(this.reps, this.anglesFunction(poses[0].keypoints), this.state, this.states, this.instruction);
       }
     }
     else {
