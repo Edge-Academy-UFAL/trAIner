@@ -132,7 +132,7 @@ export class Tab2Page implements AfterViewInit, OnDestroy {
     this.joints = exercises[this.currentExercise]['joints'];
     this.exerciseFunction = exercises[this.currentExercise]['exercise_function'];
     this.anglesFunction = exercises[this.currentExercise]['angles_function'];
-    this.instruction = exercises[this.currentExercise]['instruction'];
+    this.instruction = exercises[this.currentExercise]['initial_instruction'];
 
   }
   async init() {
