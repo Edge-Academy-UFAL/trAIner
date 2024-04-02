@@ -311,10 +311,12 @@ export function shoulderPress(reps: any, angle: any, state: any, states: any, in
   if (leftShoulderAngle < 145 && rightShoulderAngle < 145 && leftElbowAngle > 140 && rightElbowAngle > 140 && state === states['GOING_UP']) {
     state = states['GOING_DOWN'];
     reps += 0.5;
+    instruction = 'Slowly let the weight down.'
   }
-  else if (leftShoulderAngle > 160 && rightShoulderAngle > 160 && leftElbowAngle < 110 && rightElbowAngle < 110 && state === states['GOING_DOWN']) {
+  else if (leftShoulderAngle < 110 && rightShoulderAngle < 110 && leftElbowAngle < 110 && rightElbowAngle < 110 && state === states['GOING_DOWN']) {
     state = states['GOING_UP'];
     reps += 0.5;
+    instruction = 'Slowly push the weight up.'
   }
 
   return [reps, state, instruction];
@@ -336,7 +338,7 @@ export function shoulderSideRaise(reps: any, angle: any, state: any, states: any
   
   if (!correct) return [reps, state, instruction];
 
-  if (leftShoulderAngle >= 75 && rightShoulderAngle >= 75 && state === states['GOING_UP']) {
+  if (leftShoulderAngle > 75 && rightShoulderAngle > 75 && state === states['GOING_UP']) {
     state = states['GOING_DOWN'];
     reps += 0.5;
     instruction = 'Slowly let the weight down.'

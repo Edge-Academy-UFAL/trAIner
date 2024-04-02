@@ -163,12 +163,14 @@ export class Tab2Page implements AfterViewInit, OnDestroy {
     this.ctxRepetitions.font = '70px Arial';
     let widthNumber = this.canvasRepetitions.nativeElement.width / 100;
     this.ctxRepetitions.fillText(Math.trunc(this.reps).toString(), widthNumber, 110);
-    this.ctxRepetitions.strokeStyle = 'black';
-    this.ctxRepetitions.fillStyle = 'white';
+    this.ctxRepetitions.strokeStyle = 'red';
+    this.ctxRepetitions.fillStyle = 'red';
     
-    this.ctxRepetitions.font = '30px Arial';
+    this.ctxRepetitions.font = '40px Arial';
+    this.ctxRepetitions.strokeStyle = 'red';
     this.ctxRepetitions.fillText(this.instruction, 10, this.canvasRepetitions.nativeElement.height);
     this.ctxRepetitions.strokeText(this.instruction, 10, this.canvasRepetitions.nativeElement.height);
+    this.ctxRepetitions.fillStyle = 'red';
 
     if (poses && poses[0]) {
       this.ctx.globalAlpha = 1.0
