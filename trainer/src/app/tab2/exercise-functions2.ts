@@ -130,8 +130,6 @@ export function getElbowAngles(keypoints: any) {
   return [getAngleBetweenPoints(leftShoulder, leftElbow, leftWrist), getAngleBetweenPoints(rightShoulder, rightElbow, rightWrist)];
 }
 
-// refatorar | unificar as duas funções abaixo
-
 export function getAnglesBiceps(keypoints: any) {
   return getElbowAngles(keypoints).concat(getShoulderAngles(keypoints));
 }
@@ -185,11 +183,11 @@ export function bicepCurls(reps: any, angles: any, state: any, states: any, inst
 
   if (!correct) return [reps, state, instruction];
 
-  if (leftAngle < 45 && rightAngle < 45 && leftShoulderAngle < 40 && rightShoulderAngle < 40 && state === states['GOING_UP']) {
+  if (leftAngle < 45 && rightAngle < 45 && state === states['GOING_UP']) {
     state = states['GOING_DOWN'];
     reps += 0.5;
   }
-  else if (leftAngle > 120 && rightAngle > 120 && leftShoulderAngle < 40 && rightShoulderAngle < 40 && state === states['GOING_DOWN']) {
+  else if (leftAngle > 120 && rightAngle > 120 && state === states['GOING_DOWN']) {
     state = states['GOING_UP'];
     reps += 0.5;
   }
@@ -221,12 +219,10 @@ export function unilateralBicepCurls(reps: any, angles: any, state: any, states:
   if (elbowAngle < 45 && state === states['GOING_UP']) {
     state = states['GOING_DOWN'];
     reps += 0.5;
-    instruction = 'Slowly let the weight down.'
   }
   else if (elbowAngle > 140 && state === states['GOING_DOWN']) {
     state = states['GOING_UP'];
     reps += 0.5;
-    instruction = 'Slowly lift the weight up.'
   }
 
   return [reps, state, instruction];
@@ -243,38 +239,20 @@ export function tricepExtension(reps: any, angles: any, state: any, states: any,
     instruction = 'Keep your elbows close to your body.';
     correct = false;
   }
-
   else if (state == states['GOING_UP']) {
-    instruction = 'Slowly push the weight up.';
+    instruction = 'Let the weight up.';
   }
-
   else if (state == states['GOING_DOWN']) {
-    instruction = 'Slowly let the weight down.';
+    instruction = 'Push the weight down.';
   }
 
-  if (leftAngle < 45 && rightAngle < 45 && leftShoulderAngle < 20 && rightShoulderAngle < 20 && state === states['GOING_UP']) {
+  if (!correct) return [reps, state, instruction];
+
+  if (leftAngle < 45 && rightAngle < 45 && state === states['GOING_UP']) {
     state = states['GOING_DOWN'];
     reps += 0.5;
   }
-  else if (leftAngle > 145 && rightAngle > 145 && leftShoulderAngle < 20 && rightShoulderAngle < 20 && state === states['GOING_DOWN']) {
-    state = states['GOING_UP'];
-    reps += 0.5;
-  }
-
-  return [reps, state, instruction];
-}
-
-export function unilateralTricepExtension(reps: any, angle: any, state: any, states: any, instruction: any) {
-  console.log(angle);
-  if (angle === null) {
-    return [reps, state, instruction];
-  }
-
-  if (angle < 45 && state === states['GOING_UP']) {
-    state = states['GOING_DOWN'];
-    reps += 0.5;
-  }
-  else if (angle > 140 && state === states['GOING_DOWN']) {
+  else if (leftAngle > 145 && rightAngle > 145 && state === states['GOING_DOWN']) {
     state = states['GOING_UP'];
     reps += 0.5;
   }
@@ -289,30 +267,28 @@ export function shoulderPress(reps: any, angle: any, state: any, states: any, in
   }
   let correct = true;
 
-  if (leftShoulderAngle < 25 || rightShoulderAngle < 25) {
-    instruction = 'Don\'t let your elbows go below your shoulders.';
+  if (leftShoulderAngle < 60 || rightShoulderAngle < 60) {
+    instruction = 'Don\'t lower your arms too much.';
     correct = false;
   }
   else if (leftElbowAngle < 80 || rightElbowAngle < 80) {
-    instruction = 'Keep your elbows at a 90 degree angle.';
+    instruction = 'Keep your elbows at 90°.';
     correct = false;
   }
-
   else if (state == states['GOING_UP']) {
     instruction = 'Slowly push the weight up.';
   }
-
   else if (state == states['GOING_DOWN']) {
     instruction = 'Slowly let the weight down.';
   }
 
   if (!correct) return [reps, state, instruction];
 
-  if (leftShoulderAngle < 145 && rightShoulderAngle < 145 && leftElbowAngle > 140 && rightElbowAngle > 140 && state === states['GOING_UP']) {
+  if (leftShoulderAngle > 160 && rightShoulderAngle > 160 && state === states['GOING_UP']) {
     state = states['GOING_DOWN'];
     reps += 0.5;
   }
-  else if (leftShoulderAngle > 160 && rightShoulderAngle > 160 && leftElbowAngle < 110 && rightElbowAngle < 110 && state === states['GOING_DOWN']) {
+  else if (leftShoulderAngle < 95 && rightShoulderAngle < 95 && state === states['GOING_DOWN']) {
     state = states['GOING_UP'];
     reps += 0.5;
   }
@@ -333,18 +309,22 @@ export function shoulderSideRaise(reps: any, angle: any, state: any, states: any
     instruction = 'Don\'t flex your elbow too much.';
     correct = false;
   }
-  
+  else if (state == states['GOING_UP']) {
+    instruction = 'Slowly lift the weight up.';
+  }
+  else if (state == states['GOING_DOWN']) {
+    instruction = 'Slowly let the weight down.';
+  }
+
   if (!correct) return [reps, state, instruction];
 
   if (leftShoulderAngle >= 75 && rightShoulderAngle >= 75 && state === states['GOING_UP']) {
     state = states['GOING_DOWN'];
     reps += 0.5;
-    instruction = 'Slowly let the weight down.'
   }
   else if (leftShoulderAngle < 30 && rightShoulderAngle < 30 && state === states['GOING_DOWN']) {
     state = states['GOING_UP'];
     reps += 0.5;
-    instruction = 'Slowly lift the weight up.'
   }
 
   return [reps, state, instruction];
