@@ -318,7 +318,7 @@ export function shoulderSideRaise(reps: any, angle: any, state: any, states: any
 
   if (!correct) return [reps, state, instruction];
 
-  if (leftShoulderAngle >= 75 && rightShoulderAngle >= 75 && state === states['GOING_UP']) {
+  if (leftShoulderAngle > 75 && rightShoulderAngle > 75 && state === states['GOING_UP']) {
     state = states['GOING_DOWN'];
     reps += 0.5;
   }
