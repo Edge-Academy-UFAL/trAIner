@@ -1,0 +1,21 @@
+.inverted{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: fill;
+  // display: block;
+  transform: rotateY(180deg)
+}
+
+canvas {
+  aspect-ratio: attr(width) / attr(height); /* Isso define a proporção de aspecto do canvas com base nas dimensões do vídeo */
+}
+
+#canvasRepetitions{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+

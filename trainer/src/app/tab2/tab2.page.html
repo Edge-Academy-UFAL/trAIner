@@ -1,0 +1,21 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      {{ currentExercise}}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content [fullscreen]="true" class="ion-padding camera-content">
+  <div class="video-container">
+    <video #video id="webcam" class="inverted" autoplay></video>
+    <canvas #canvas id="canvas" class="inverted"></canvas>
+    <canvas #canvasRepetitions id="canvasRepetitions"></canvas>
+  </div>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="center">
+    <ion-fab-button (click)="stopWorkout()">
+      <ion-icon name="stop"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

@@ -1,0 +1,33 @@
+ion-item {
+    padding: 1em;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+
+ion-item img {
+    width: 50px;
+}
+
+ion-content {
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+}
+
+#logo {
+    font-size: 1.5em;
+    font-weight: 700;
+    text-decoration: none;
+    color: black;
+}
+
+#logo span {
+    color: var(--primary-color);
+}

@@ -1,0 +1,20 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Seleção de exercício</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+
+  <ion-list>
+    <ion-item *ngFor="let exercise of allExercises" (click)="selectExercise(exercise.name)">
+      <img [src]="exercise.image" alt="{{ exercise.name }}">
+      <ion-button fill="clear" (click)="selectExercise(exercise.name)">
+        {{ exercise.name }}
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>
