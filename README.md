@@ -51,3 +51,11 @@ Por fim, vamos abrir o android studio para a construção da aplicação
 <uses-permission android:name="android.permission.CAMERA" /> // Permissão de câmera no android
 ```
 Por fim, vá na parte de menu do android studio -> build  -> Build bundle(s)/ APK (s) -> Build APK
+
+## Telas
+<div style="display: block;">
+    <img src="/readmeImages/home.jpeg" alt="Home" style="height: 500px;"/>
+    <img src="/readmeImages/select exercise.jpeg" alt="Select Exercise" style="height: 500px;"/>
+    <img src="/readmeImages/start rep.jpeg" alt="Start rep" style="height: 500px;"/>
+    <img src="/readmeImages/end rep.jpeg" alt="End rep" style="height: 500px;"/>
+</div>
